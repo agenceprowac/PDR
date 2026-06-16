@@ -39,6 +39,7 @@ interface StoreContextType {
   dossiers: Dossier[];
   dynamicFields: DynamicField[];
   isLoading: boolean;
+  error: string | null;
   addDossier: (dossier: Omit<Dossier, 'id'>) => Promise<string>;
   updateDossier: (dossier: Dossier) => Promise<void>;
   deleteDossier: (id: string) => Promise<void>;
@@ -52,6 +53,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [dynamicFields, setDynamicFields] = useState<DynamicField[]>([]);
   const [dossiers, setDossiers] = useState<Dossier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const refreshData = async () => {
     setIsLoading(true);
@@ -94,8 +96,9 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         }));
         setDossiers(formattedDossiers);
       }
-    } catch (error) {
-      console.error('Error fetching data from Supabase:', error);
+    } catch (err: any) {
+      console.error('Error fetching data from Supabase:', err);
+      setError(err.message || 'Erreur de connexion à la base de données');
     } finally {
       setIsLoading(false);
     }
@@ -198,7 +201,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <StoreContext.Provider value={{ dossiers, dynamicFields, isLoading, addDossier, updateDossier, deleteDossier, addDynamicField, refreshData }}>
+    <StoreContext.Provider value={{ dossiers, dynamicFields, isLoading, error, addDossier, updateDossier, deleteDossier, addDynamicField, refreshData }}>
       {children}
     </StoreContext.Provider>
   );

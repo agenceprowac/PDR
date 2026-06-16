@@ -16,6 +16,11 @@ export default function Dashboard() {
       </div>
 
       <div className="glass-panel">
+        {error && (
+          <div style={{ padding: '1rem', background: '#fee2e2', color: '#b91c1c', borderRadius: '4px', marginBottom: '1rem' }}>
+            <strong>Erreur de chargement:</strong> {error}
+          </div>
+        )}
         {isLoading ? (
           <p style={{ color: 'var(--text-secondary)' }}>Chargement des dossiers en cours...</p>
         ) : dossiers.length === 0 ? (
