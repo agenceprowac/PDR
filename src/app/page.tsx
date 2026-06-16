@@ -4,7 +4,7 @@ import { useStore } from '@/context/StoreContext'
 import Link from 'next/link'
 
 export default function Dashboard() {
-  const { dossiers, isLoading } = useStore()
+  const { dossiers, isLoading, error } = useStore()
 
   return (
     <div className="animate-fade-in">
