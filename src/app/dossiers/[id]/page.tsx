@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import { useStore, Product, DossierFee, DynamicField } from '@/context/StoreContext'
 
@@ -11,6 +11,8 @@ export default function DossierDetail() {
   
   const { dossiers, updateDossier, dynamicFields, addDynamicField } = useStore()
   const dossier = dossiers.find(d => d.id === dossierId)
+
+  const [companyInfo, setCompanyInfo] = useState<{nom: string, rccm: string, logo: string | null}>({ nom: '', rccm: '', logo: null })
 
   // State for new product
   const [newProdName, setNewProdName] = useState('')
@@ -32,6 +34,25 @@ export default function DossierDetail() {
   const [isCreatingField, setIsCreatingField] = useState(false)
   const [newFieldName, setNewFieldName] = useState('')
   const [newFieldMethod, setNewFieldMethod] = useState<'poids'|'valeur'|'quantite'>('valeur')
+
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedName = localStorage.getItem('company_name')
+      const savedRccm = localStorage.getItem('company_rccm')
+      const savedLogo = localStorage.getItem('company_logo')
+      
+      setCompanyInfo({
+        nom: savedName || 'Mon Entreprise',
+        rccm: savedRccm || '',
+        logo: savedLogo || null
+      })
+
+      if (window.location.search.includes('print=true')) {
+        setTimeout(() => window.print(), 500)
+      }
+    }
+  }, [])
 
   if (!dossier) return <div style={{ padding: '2rem' }}>Dossier introuvable.</div>
 
@@ -219,14 +240,21 @@ export default function DossierDetail() {
     <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
       
       {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1>Dossier: {dossier.reference}</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Créé le {new Date(dossier.date_creation).toLocaleDateString()}</p>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '1.5rem', borderBottom: '2px solid var(--border-glass)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          {companyInfo.logo && <img src={companyInfo.logo} alt="Logo" style={{ maxHeight: '60px', maxWidth: '150px', objectFit: 'contain' }} />}
+          <div>
+            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>{companyInfo.nom}</h2>
+            {companyInfo.rccm && <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>RCCM: {companyInfo.rccm}</p>}
+          </div>
         </div>
         <div style={{ textAlign: 'right' }}>
-          <p><strong>Devise:</strong> {dossier.devise}</p>
-          <p><strong>Taux:</strong> {dossier.taux_change}</p>
+          <h1 style={{ margin: 0, fontSize: '1.5rem' }}>Dossier: {dossier.reference}</h1>
+          <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Créé le {new Date(dossier.date_creation).toLocaleDateString()}</p>
+          <div style={{ marginTop: '0.5rem', fontSize: '0.875rem' }}>
+            <p style={{ margin: 0 }}><strong>Devise:</strong> {dossier.devise}</p>
+            <p style={{ margin: 0 }}><strong>Taux:</strong> {dossier.taux_change}</p>
+          </div>
         </div>
       </div>
 

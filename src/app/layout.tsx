@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { StoreProvider } from '@/context/StoreContext'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'PDR SaaS - Calcul de Prix de Revient',
@@ -25,9 +26,9 @@ export default function RootLayout({
               <a href="/" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
                 📁 Mes Dossiers
               </a>
-              <a href="#" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
+              <Link href="/parametres" className="btn btn-secondary" style={{ justifyContent: 'flex-start' }}>
                 ⚙️ Paramètres
-              </a>
+              </Link>
             </nav>
           </aside>
           <main className="main-content">

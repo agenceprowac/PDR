@@ -4,7 +4,13 @@ import { useStore } from '@/context/StoreContext'
 import Link from 'next/link'
 
 export default function Dashboard() {
-  const { dossiers, isLoading, error } = useStore()
+  const { dossiers, isLoading, error, deleteDossier } = useStore()
+
+  const handleDelete = async (id: string) => {
+    if (confirm("Voulez-vous vraiment supprimer ce dossier ? Cette action est irréversible.")) {
+      await deleteDossier(id)
+    }
+  }
 
   return (
     <div className="animate-fade-in">
@@ -46,9 +52,17 @@ export default function Dashboard() {
                   <td style={{ padding: '1rem' }}>{dossier.produits.length}</td>
                   <td style={{ padding: '1rem' }}>{dossier.devise}</td>
                   <td style={{ padding: '1rem' }}>
-                    <Link href={`/dossiers/${dossier.id}`} className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}>
-                      Ouvrir
-                    </Link>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <Link href={`/dossiers/${dossier.id}`} className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }} title="Ouvrir">
+                        Ouvrir
+                      </Link>
+                      <Link href={`/dossiers/${dossier.id}?print=true`} className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }} title="Imprimer">
+                        🖨️
+                      </Link>
+                      <button onClick={() => handleDelete(dossier.id)} className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.875rem', color: 'var(--danger)' }} title="Supprimer">
+                        🗑️
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
