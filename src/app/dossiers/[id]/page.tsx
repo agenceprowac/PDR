@@ -46,7 +46,7 @@ export default function DossierDetail() {
       const savedLogo = localStorage.getItem('company_logo')
       
       setCompanyInfo({
-        nom: savedName || 'Mon Entreprise',
+        nom: savedName || '',
         rccm: savedRccm || '',
         contact: savedContact || '',
         email: savedEmail || '',
@@ -247,10 +247,10 @@ export default function DossierDetail() {
       
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '1.5rem', borderBottom: '2px solid var(--border-glass)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {companyInfo.logo && <img src={companyInfo.logo} alt="Logo" style={{ maxHeight: '60px', maxWidth: '150px', objectFit: 'contain' }} />}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          {companyInfo.logo && <img src={companyInfo.logo} alt="Logo" style={{ maxHeight: '80px', maxWidth: '200px', objectFit: 'contain' }} />}
           <div>
-            <h2 style={{ margin: 0, fontSize: '1.25rem' }}>{companyInfo.nom}</h2>
+            {companyInfo.nom && <h2 style={{ margin: 0, fontSize: '1.25rem' }}>{companyInfo.nom}</h2>}
             {companyInfo.rccm && <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>RCCM: {companyInfo.rccm}</p>}
             {(companyInfo.contact || companyInfo.email || companyInfo.adresse) && (
               <div style={{ marginTop: '0.25rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
