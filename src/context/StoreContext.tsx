@@ -58,7 +58,18 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const refreshData = async () => {
     setIsLoading(true);
     try {
-      const { data: fieldsData } = await supabase.from('champs_dynamiques').select('*');
+      const [fieldsResponse, dossiersResponse] = await Promise.all([
+        supabase.from('champs_dynamiques').select('*'),
+        supabase.from('dossiers').select(`
+          *,
+          produits (*),
+          frais_dossier (*)
+        `).order('date_creation', { ascending: false })
+      ]);
+
+      const fieldsData = fieldsResponse.data;
+      const dossiersData = dossiersResponse.data;
+
       if (fieldsData) {
         setDynamicFields(fieldsData.map(f => ({
           id: f.id,
@@ -67,10 +78,6 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         })));
       }
 
-      const { data: dossiersData } = await supabase.from('dossiers').select('*').order('date_creation', { ascending: false });
-      const { data: produitsData } = await supabase.from('produits').select('*');
-      const { data: fraisData } = await supabase.from('frais_dossier').select('*');
-
       if (dossiersData) {
         const formattedDossiers: Dossier[] = dossiersData.map(d => ({
           id: d.id,
@@ -78,21 +85,17 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
           date_creation: d.date_creation,
           devise: d.devise,
           taux_change: Number(d.taux_change),
-          produits: (produitsData || [])
-            .filter(p => p.dossier_id === d.id)
-            .map(p => ({
-              id: p.id,
-              nom: p.nom,
-              quantite: Number(p.quantite),
-              poids_unitaire: Number(p.poids_unitaire),
-              prix_achat_unitaire: Number(p.prix_achat_unitaire)
-            })),
-          frais: (fraisData || [])
-            .filter(f => f.dossier_id === d.id)
-            .map(f => ({
-              fieldId: f.champ_dynamique_id,
-              montant: Number(f.montant)
-            }))
+          produits: (d.produits || []).map((p: any) => ({
+            id: p.id,
+            nom: p.nom,
+            quantite: Number(p.quantite),
+            poids_unitaire: Number(p.poids_unitaire),
+            prix_achat_unitaire: Number(p.prix_achat_unitaire)
+          })),
+          frais: (d.frais_dossier || []).map((f: any) => ({
+            fieldId: f.champ_dynamique_id,
+            montant: Number(f.montant)
+          }))
         }));
         setDossiers(formattedDossiers);
       }
