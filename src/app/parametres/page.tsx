@@ -74,28 +74,31 @@ export default function Parametres() {
   }
 
   return (
-    <div className="animate-fade-in" style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
-      <h1>Paramètres</h1>
+    <div className="animate-fade-in" style={{ maxWidth: '1000px', margin: '0 auto' }}>
+      <h1 style={{ marginBottom: 'var(--spacing-xl)' }}>Paramètres</h1>
 
-      {/* Menu Interne */}
-      <div style={{ display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '1rem' }}>
-        <button 
-          onClick={() => setActiveTab('entreprise')}
-          className={`btn ${activeTab === 'entreprise' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
-        >
-          🏢 Informations de l'Entreprise
-        </button>
-        <button 
-          onClick={() => setActiveTab('frais')}
-          className={`btn ${activeTab === 'frais' ? 'btn-primary' : 'btn-secondary'}`}
-          style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
-        >
-          💰 Types de Frais
-        </button>
-      </div>
+      <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+        {/* Menu Interne (Sidebar) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', width: '250px', flexShrink: 0, paddingRight: '1rem', borderRight: '1px solid var(--border-glass)' }}>
+          <button 
+            onClick={() => setActiveTab('entreprise')}
+            className={`btn ${activeTab === 'entreprise' ? 'btn-primary' : 'btn-secondary'}`}
+            style={{ padding: '0.75rem 1rem', fontSize: '0.875rem', justifyContent: 'flex-start' }}
+          >
+            🏢 Informations de l'Entreprise
+          </button>
+          <button 
+            onClick={() => setActiveTab('frais')}
+            className={`btn ${activeTab === 'frais' ? 'btn-primary' : 'btn-secondary'}`}
+            style={{ padding: '0.75rem 1rem', fontSize: '0.875rem', justifyContent: 'flex-start' }}
+          >
+            💰 Types de Frais
+          </button>
+        </div>
 
-      {activeTab === 'entreprise' && (
+        {/* Contenu */}
+        <div style={{ flex: 1 }}>
+          {activeTab === 'entreprise' && (
         <div className="glass-panel animate-fade-in">
           <h2 style={{ marginBottom: '1.5rem', color: 'var(--accent-primary)' }}>🏢 Informations de l'Entreprise</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
@@ -247,6 +250,8 @@ export default function Parametres() {
         </form>
         </div>
       )}
+        </div>
+      </div>
     </div>
   )
 }
