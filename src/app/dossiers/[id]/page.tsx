@@ -247,7 +247,7 @@ export default function DossierDetail() {
       
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', paddingBottom: '1.5rem', borderBottom: '2px solid var(--border-glass)' }}>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+        <div className="print-only" style={{ flexDirection: 'column', gap: '0.5rem' }}>
           {companyInfo.logo && <img src={companyInfo.logo} alt="Logo" style={{ maxHeight: '80px', maxWidth: '200px', objectFit: 'contain' }} />}
           <div>
             {companyInfo.nom && <h2 style={{ margin: 0, fontSize: '1.25rem' }}>{companyInfo.nom}</h2>}

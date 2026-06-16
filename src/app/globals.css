@@ -215,4 +215,13 @@ th {
   body {
     background: white !important;
   }
+  .print-only {
+    display: flex !important;
+  }
+}
+
+@media screen {
+  .print-only {
+    display: none !important;
+  }
 }
