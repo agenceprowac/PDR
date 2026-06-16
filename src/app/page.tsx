@@ -4,7 +4,7 @@ import { useStore } from '@/context/StoreContext'
 import Link from 'next/link'
 
 export default function Dashboard() {
-  const { dossiers } = useStore()
+  const { dossiers, isLoading } = useStore()
 
   return (
     <div className="animate-fade-in">
@@ -16,7 +16,9 @@ export default function Dashboard() {
       </div>
 
       <div className="glass-panel">
-        {dossiers.length === 0 ? (
+        {isLoading ? (
+          <p style={{ color: 'var(--text-secondary)' }}>Chargement des dossiers en cours...</p>
+        ) : dossiers.length === 0 ? (
           <p style={{ color: 'var(--text-secondary)' }}>Aucun dossier en cours. Créez-en un nouveau !</p>
         ) : (
           <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
