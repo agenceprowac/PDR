@@ -6,6 +6,9 @@ import { useStore, DynamicField } from '@/context/StoreContext'
 export default function Parametres() {
   const { dynamicFields, addDynamicField } = useStore()
   
+  // Tab state
+  const [activeTab, setActiveTab] = useState<'entreprise' | 'frais'>('entreprise')
+
   // Entreprise state
   const [nom, setNom] = useState('')
   const [rccm, setRccm] = useState('')
@@ -74,8 +77,27 @@ export default function Parametres() {
     <div className="animate-fade-in" style={{ maxWidth: '800px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: 'var(--spacing-xl)' }}>
       <h1>Paramètres</h1>
 
-      <div className="glass-panel">
-        <h2 style={{ marginBottom: '1.5rem', color: 'var(--accent-primary)' }}>🏢 Informations de l'Entreprise</h2>
+      {/* Menu Interne */}
+      <div style={{ display: 'flex', gap: '1rem', borderBottom: '1px solid var(--border-glass)', paddingBottom: '1rem' }}>
+        <button 
+          onClick={() => setActiveTab('entreprise')}
+          className={`btn ${activeTab === 'entreprise' ? 'btn-primary' : 'btn-secondary'}`}
+          style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
+        >
+          🏢 Informations de l'Entreprise
+        </button>
+        <button 
+          onClick={() => setActiveTab('frais')}
+          className={`btn ${activeTab === 'frais' ? 'btn-primary' : 'btn-secondary'}`}
+          style={{ padding: '0.5rem 1rem', fontSize: '0.875rem' }}
+        >
+          💰 Types de Frais
+        </button>
+      </div>
+
+      {activeTab === 'entreprise' && (
+        <div className="glass-panel animate-fade-in">
+          <h2 style={{ marginBottom: '1.5rem', color: 'var(--accent-primary)' }}>🏢 Informations de l'Entreprise</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
           Ces informations apparaîtront sur l'en-tête de vos dossiers imprimés.
         </p>
@@ -165,10 +187,12 @@ export default function Parametres() {
           </button>
           {isSavedInfo && <span style={{ color: 'var(--success)', fontSize: '0.875rem', marginTop: '0.5rem' }}>Informations enregistrées avec succès !</span>}
         </form>
-      </div>
+        </div>
+      )}
 
-      <div className="glass-panel">
-        <h2 style={{ marginBottom: '1.5rem', color: 'var(--accent-primary)' }}>💰 Types de Frais et Règle de Répartition</h2>
+      {activeTab === 'frais' && (
+        <div className="glass-panel animate-fade-in">
+          <h2 style={{ marginBottom: '1.5rem', color: 'var(--accent-primary)' }}>💰 Types de Frais et Règle de Répartition</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
           Gérez les types de frais disponibles lors de l'édition d'un dossier.
         </p>
@@ -221,8 +245,8 @@ export default function Parametres() {
           </button>
           {isSavedField && <span style={{ color: 'var(--success)', fontSize: '0.875rem', marginLeft: '1rem' }}>Frais ajouté avec succès !</span>}
         </form>
-
-      </div>
+        </div>
+      )}
     </div>
   )
 }
