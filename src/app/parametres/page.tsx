@@ -9,6 +9,9 @@ export default function Parametres() {
   // Entreprise state
   const [nom, setNom] = useState('')
   const [rccm, setRccm] = useState('')
+  const [contact, setContact] = useState('')
+  const [email, setEmail] = useState('')
+  const [adresse, setAdresse] = useState('')
   const [logo, setLogo] = useState<string | null>(null)
   
   const [isSavedInfo, setIsSavedInfo] = useState(false)
@@ -23,6 +26,9 @@ export default function Parametres() {
     if (typeof window !== 'undefined') {
       setNom(localStorage.getItem('company_name') || '')
       setRccm(localStorage.getItem('company_rccm') || '')
+      setContact(localStorage.getItem('company_contact') || '')
+      setEmail(localStorage.getItem('company_email') || '')
+      setAdresse(localStorage.getItem('company_adresse') || '')
       setLogo(localStorage.getItem('company_logo') || null)
     }
   }, [])
@@ -43,6 +49,9 @@ export default function Parametres() {
     if (typeof window !== 'undefined') {
       localStorage.setItem('company_name', nom)
       localStorage.setItem('company_rccm', rccm)
+      localStorage.setItem('company_contact', contact)
+      localStorage.setItem('company_email', email)
+      localStorage.setItem('company_adresse', adresse)
       if (logo) {
         localStorage.setItem('company_logo', logo)
       } else {
@@ -91,6 +100,39 @@ export default function Parametres() {
               value={rccm} 
               onChange={e => setRccm(e.target.value)} 
               placeholder="Ex: CI-ABJ-2023-B-12345" 
+            />
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Contact Téléphonique</label>
+            <input 
+              type="text" 
+              className="input-field" 
+              value={contact} 
+              onChange={e => setContact(e.target.value)} 
+              placeholder="Ex: +225 01 02 03 04 05" 
+            />
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Adresse Email</label>
+            <input 
+              type="email" 
+              className="input-field" 
+              value={email} 
+              onChange={e => setEmail(e.target.value)} 
+              placeholder="Ex: contact@entreprise.com" 
+            />
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Adresse Géographique</label>
+            <input 
+              type="text" 
+              className="input-field" 
+              value={adresse} 
+              onChange={e => setAdresse(e.target.value)} 
+              placeholder="Ex: Abidjan, Plateau, Immeuble X" 
             />
           </div>
 

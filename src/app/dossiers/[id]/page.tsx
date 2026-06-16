@@ -12,7 +12,7 @@ export default function DossierDetail() {
   const { dossiers, updateDossier, dynamicFields, addDynamicField } = useStore()
   const dossier = dossiers.find(d => d.id === dossierId)
 
-  const [companyInfo, setCompanyInfo] = useState<{nom: string, rccm: string, logo: string | null}>({ nom: '', rccm: '', logo: null })
+  const [companyInfo, setCompanyInfo] = useState<{nom: string, rccm: string, contact: string, email: string, adresse: string, logo: string | null}>({ nom: '', rccm: '', contact: '', email: '', adresse: '', logo: null })
 
   // State for new product
   const [newProdName, setNewProdName] = useState('')
@@ -40,11 +40,17 @@ export default function DossierDetail() {
     if (typeof window !== 'undefined') {
       const savedName = localStorage.getItem('company_name')
       const savedRccm = localStorage.getItem('company_rccm')
+      const savedContact = localStorage.getItem('company_contact')
+      const savedEmail = localStorage.getItem('company_email')
+      const savedAdresse = localStorage.getItem('company_adresse')
       const savedLogo = localStorage.getItem('company_logo')
       
       setCompanyInfo({
         nom: savedName || 'Mon Entreprise',
         rccm: savedRccm || '',
+        contact: savedContact || '',
+        email: savedEmail || '',
+        adresse: savedAdresse || '',
         logo: savedLogo || null
       })
 
@@ -246,6 +252,14 @@ export default function DossierDetail() {
           <div>
             <h2 style={{ margin: 0, fontSize: '1.25rem' }}>{companyInfo.nom}</h2>
             {companyInfo.rccm && <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-secondary)' }}>RCCM: {companyInfo.rccm}</p>}
+            {(companyInfo.contact || companyInfo.email || companyInfo.adresse) && (
+              <div style={{ marginTop: '0.25rem', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                {companyInfo.adresse && <span>📍 {companyInfo.adresse} <br/></span>}
+                {companyInfo.contact && <span>📞 {companyInfo.contact} </span>}
+                {companyInfo.contact && companyInfo.email && <span> | </span>}
+                {companyInfo.email && <span>✉️ {companyInfo.email}</span>}
+              </div>
+            )}
           </div>
         </div>
         <div style={{ textAlign: 'right' }}>
