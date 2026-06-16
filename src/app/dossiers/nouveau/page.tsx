@@ -12,11 +12,10 @@ export default function NouveauDossier() {
   const [devise, setDevise] = useState('EUR')
   const [tauxChange, setTauxChange] = useState('655.957')
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     
-    const newDossier: Dossier = {
-      id: Math.random().toString(36).substr(2, 9),
+    const newDossier = {
       reference: reference || `IMP-${new Date().getFullYear()}-${Math.floor(Math.random() * 1000)}`,
       date_creation: new Date().toISOString(),
       devise,
@@ -25,8 +24,13 @@ export default function NouveauDossier() {
       frais: []
     }
     
-    addDossier(newDossier)
-    router.push(`/dossiers/${newDossier.id}`)
+    try {
+      const newId = await addDossier(newDossier)
+      router.push(`/dossiers/${newId}`)
+    } catch (error) {
+      console.error("Erreur lors de la création du dossier", error)
+      alert("Une erreur est survenue lors de la création du dossier.")
+    }
   }
 
   return (

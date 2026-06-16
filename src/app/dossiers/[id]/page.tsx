@@ -35,7 +35,7 @@ export default function DossierDetail() {
 
   if (!dossier) return <div style={{ padding: '2rem' }}>Dossier introuvable.</div>
 
-  const handleAddProduct = (e: React.FormEvent) => {
+  const handleAddProduct = async (e: React.FormEvent) => {
     e.preventDefault()
     
     if (editingProductId) {
@@ -49,18 +49,18 @@ export default function DossierDetail() {
           prix_achat_unitaire: parseFloat(newProdPrice)
         } : p
       )
-      updateDossier({ ...dossier, produits: updatedProducts })
+      await updateDossier({ ...dossier, produits: updatedProducts })
       setEditingProductId(null)
     } else {
       // Logic for adding
       const product: Product = {
-        id: Math.random().toString(36).substr(2, 9),
+        id: Math.random().toString(36).substr(2, 9), // Supabase ignorera cet id pour l'insertion de nouveaux produits, mais il est nécessaire pour le type TS local
         nom: newProdName,
         quantite: parseFloat(newProdQty),
         poids_unitaire: parseFloat(newProdWeight),
         prix_achat_unitaire: parseFloat(newProdPrice)
       }
-      updateDossier({ ...dossier, produits: [...dossier.produits, product] })
+      await updateDossier({ ...dossier, produits: [...dossier.produits, product] })
     }
     
     setNewProdName(''); setNewProdQty(''); setNewProdWeight(''); setNewProdPrice('');
@@ -81,14 +81,14 @@ export default function DossierDetail() {
     setNewProdName(''); setNewProdQty(''); setNewProdWeight(''); setNewProdPrice('');
   }
 
-  const handleDeleteProduct = (productId: string) => {
+  const handleDeleteProduct = async (productId: string) => {
     if (confirm("Voulez-vous vraiment supprimer ce produit ?")) {
       const updatedProducts = dossier.produits.filter(p => p.id !== productId)
-      updateDossier({ ...dossier, produits: updatedProducts })
+      await updateDossier({ ...dossier, produits: updatedProducts })
     }
   }
 
-  const handleAddFee = (e: React.FormEvent) => {
+  const handleAddFee = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!selectedFieldId || !newFeeAmount) return
     
@@ -127,7 +127,7 @@ export default function DossierDetail() {
       }
     }
     
-    updateDossier({ ...dossier, frais: newFrais })
+    await updateDossier({ ...dossier, frais: newFrais })
     setNewFeeAmount('')
     setSelectedFieldId('')
   }
@@ -144,22 +144,26 @@ export default function DossierDetail() {
     setNewFeeAmount('')
   }
 
-  const handleDeleteFee = (fieldId: string) => {
+  const handleDeleteFee = async (fieldId: string) => {
     if (confirm("Voulez-vous vraiment supprimer ce frais du dossier ?")) {
       const newFrais = dossier.frais.filter(f => f.fieldId !== fieldId)
-      updateDossier({ ...dossier, frais: newFrais })
+      await updateDossier({ ...dossier, frais: newFrais })
     }
   }
 
-  const handleCreateField = (e: React.FormEvent) => {
+  const handleCreateField = async (e: React.FormEvent) => {
     e.preventDefault()
-    const field: DynamicField = {
-      id: Math.random().toString(36).substr(2, 9),
+    const field = {
       nom: newFieldName,
       methode_repartition: newFieldMethod
     }
-    addDynamicField(field)
-    setSelectedFieldId(field.id)
+    await addDynamicField(field)
+    
+    // Pour sélectionner le champ nouvellement créé, nous pourrions avoir besoin de le retrouver, 
+    // mais refreshData de addDynamicField l'ajoutera dans dynamicFields. 
+    // Si on veut le sélectionner, il faudrait peut-être utiliser son nom pour le trouver car l'id est généré par DB.
+    // Simplification: on réinitialise l'ID sélectionné
+    setSelectedFieldId('')
     setIsCreatingField(false)
     setNewFieldName('')
   }
